@@ -1,12 +1,61 @@
 <!DOCTYPE html>
 <html lang="nl">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Home | jvs333</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Liggende Klok</title>
+  <style>
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      background-color: #282c34;
+      color: #61dafb;
+      font-family: 'Arial', sans-serif;
+    }
+
+    .clock {
+      display: flex;
+      font-size: 5rem;
+      letter-spacing: 1rem;
+    }
+
+    .digit {
+      min-width: 2.5rem;
+      text-align: center;
+    }
+
+    .colon {
+      min-width: 1rem;
+      text-align: center;
+    }
+  </style>
 </head>
 <body>
-    <nav><li><ul><a href="#"><b>home</b></a></ul><ul><a href="/about/index.html">about</a></ul></nav>
-    <h1>home</h1>
+  <div class="clock">
+    <div class="digit" id="hour">00</div>
+    <div class="colon">:</div>
+    <div class="digit" id="minute">00</div>
+    <div class="colon">:</div>
+    <div class="digit" id="second">00</div>
+  </div>
+
+  <script>
+    function updateClock() {
+      const now = new Date();
+      const hours = String(now.getHours()).padStart(2, '0');
+      const minutes = String(now.getMinutes()).padStart(2, '0');
+      const seconds = String(now.getSeconds()).padStart(2, '0');
+
+      document.getElementById('hour').textContent = hours;
+      document.getElementById('minute').textContent = minutes;
+      document.getElementById('second').textContent = seconds;
+    }
+
+    // Update elke seconde
+    setInterval(updateClock, 1000);
+    updateClock(); // meteen bij laden
+  </script>
 </body>
 </html>
