@@ -10,24 +10,21 @@
       justify-content: center;
       align-items: center;
       height: 100vh;
-      background-color: #282c34;
-      color: #61dafb;
-      font-family: 'Arial', sans-serif;
+      background-color: #f4f4f4; /* zachte achtergrond */
+      font-family: 'Courier New', monospace; /* dik en duidelijk */
     }
 
     .clock {
       display: flex;
-      font-size: 5rem;
+      font-size: 6rem;
+      font-weight: bold;
+      color: darkolivegreen;
       letter-spacing: 1rem;
+      text-shadow: 2px 2px 6px rgba(0,0,0,0.2);
     }
 
-    .digit {
-      min-width: 2.5rem;
-      text-align: center;
-    }
-
-    .colon {
-      min-width: 1rem;
+    .digit, .colon {
+      min-width: 3rem;
       text-align: center;
     }
   </style>
@@ -55,7 +52,7 @@
 
     // Update elke seconde
     setInterval(updateClock, 1000);
-    updateClock(); // meteen bij laden
+    updateClock();
   </script>
 </body>
 </html>
