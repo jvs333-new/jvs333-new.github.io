@@ -22,7 +22,7 @@ navigator.mediaDevices.getUserMedia({
   video.srcObject = stream;
 });
 
-const ws = new WebSocket("ws://192.168.178.80:8765");
+const ws = new WebSocket("wss://192.168.178.80:8765");
 
 ws.onopen = () => {
   console.log("WS connected");
