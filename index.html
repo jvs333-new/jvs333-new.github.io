@@ -1,57 +1,48 @@
 <!DOCTYPE html>
-<html lang="nl">
+<html>
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>CLOCK</title>
-  <style>
-    body {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-      background-color: #f4f4f4;
-      font-family: 'Courier New', monospace;
-    }
-
-    .clock {
-      display: flex;
-      font-size: 6rem;
-      font-weight: bold;
-      color: black;
-      text-shadow: 2px 2px 6px rgba(0,0,0,0.2);
-    }
-
-    .digit, .colon {
-      min-width: 3rem;
-      text-align: center;
-    }
-  </style>
+<meta charset="utf-8">
+<title>Display Webcam Stream</title>
+ 
+<style>
+</style>
 </head>
+ 
 <body>
-  <div class="clock">
-    <div class="digit" id="hour">00</div>
-    <div class="colon">:</div>
-    <div class="digit" id="minute">00</div>
-    <div class="colon">:</div>
-    <div class="digit" id="second">00</div>
-  </div>
+<video id="video" autoplay muted playsinline></video>
+<canvas id="canvas" width="320" height="240" hidden></canvas>
 
-  <script>
-    function updateClock() {
-      const now = new Date();
-      const hours = String(now.getHours()).padStart(2, '0');
-      const minutes = String(now.getMinutes()).padStart(2, '0');
-      const seconds = String(now.getSeconds()).padStart(2, '0');
+<script>
+const video = document.getElementById("video");
 
-      document.getElementById('hour').textContent = hours;
-      document.getElementById('minute').textContent = minutes;
-      document.getElementById('second').textContent = seconds;
+navigator.mediaDevices.getUserMedia({
+  video: { facingMode: "user" },
+  audio: false
+}).then(stream => {
+  video.srcObject = stream;
+});
+
+const ws = new WebSocket("ws://192.168.178.80:8765");
+
+ws.onopen = () => {
+  console.log("WS connected");
+};
+
+const canvas = document.getElementById("canvas");
+const ctx = canvas.getContext("2d");
+
+setInterval(() => {
+  ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+  canvas.toBlob(blob => {
+    if (ws.readyState === WebSocket.OPEN) {
+      ws.send(blob);
     }
+  }, "image/jpeg", 0.6);
+}, 100); // 10 fps
 
-  
-    setInterval(updateClock, 1000);
-    updateClock();
-  </script>
+
+</script>
+
 </body>
 </html>
