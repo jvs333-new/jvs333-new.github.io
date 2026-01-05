@@ -61,7 +61,7 @@ const video = document.getElementById("video");
 
 navigator.mediaDevices.getUserMedia({
   video: { width: 640,
-    height: 480, facingMode: "user" },
+    height: 480, facingMode: "environment" },
   audio: false
 }).then(stream => {
   video.srcObject = stream;
