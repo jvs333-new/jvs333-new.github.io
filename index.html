@@ -10,7 +10,7 @@
  
 <body>
 <video id="video" autoplay muted playsinline></video>
-<canvas id="canvas" width="320" height="240" hidden></canvas>
+<canvas id="canvas" hidden></canvas>
 <pre id="log" style="white-space: pre-wrap;"></pre>
 
 
@@ -60,7 +60,8 @@ window.onunhandledrejection = function (e) {
 const video = document.getElementById("video");
 
 navigator.mediaDevices.getUserMedia({
-  video: { facingMode: "environment" },
+  video: { width: 640,
+    height: 480, facingMode: "user" },
   audio: false
 }).then(stream => {
   video.srcObject = stream;
@@ -84,6 +85,12 @@ ws.onclose = (e) => {
     "clean:", e.wasClean
   );
 };
+
+video.onloadedmetadata = () => {
+  canvas.width = video.videoWidth;
+  canvas.height = video.videoHeight;
+};
+
 
 const canvas = document.getElementById("canvas");
 const ctx = canvas.getContext("2d");
