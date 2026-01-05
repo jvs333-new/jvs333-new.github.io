@@ -60,7 +60,7 @@ window.onunhandledrejection = function (e) {
 const video = document.getElementById("video");
 
 navigator.mediaDevices.getUserMedia({
-  video: { facingMode: "user" },
+  video: true,
   audio: false
 }).then(stream => {
   video.srcObject = stream;
