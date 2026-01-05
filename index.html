@@ -11,8 +11,52 @@
 <body>
 <video id="video" autoplay muted playsinline></video>
 <canvas id="canvas" width="320" height="240" hidden></canvas>
+<pre id="log" style="white-space: pre-wrap;"></pre>
+
 
 <script>
+const logEl = document.getElementById("log");
+
+function writeLog(type, args) {
+  const msg = `[${type}] ` + args.map(a =>
+    typeof a === "object" ? JSON.stringify(a) : String(a)
+  ).join(" ");
+
+  logEl.textContent += msg + "\n";
+}
+
+// Bewaar originele functies
+const originalLog = console.log;
+const originalError = console.error;
+const originalWarn = console.warn;
+
+// Override console functies
+console.log = (...args) => {
+  writeLog("LOG", args);
+  originalLog(...args);
+};
+
+console.error = (...args) => {
+  writeLog("ERROR", args);
+  originalError(...args);
+};
+
+console.warn = (...args) => {
+  writeLog("WARN", args);
+  originalWarn(...args);
+};
+
+// JS runtime errors
+window.onerror = function (msg, url, line, col, err) {
+  writeLog("JS ERROR", [msg, `(${line}:${col})`]);
+};
+
+// Promise errors
+window.onunhandledrejection = function (e) {
+  writeLog("PROMISE ERROR", [e.reason]);
+};
+
+
 const video = document.getElementById("video");
 
 navigator.mediaDevices.getUserMedia({
@@ -25,7 +69,20 @@ navigator.mediaDevices.getUserMedia({
 const ws = new WebSocket("wss://192.168.178.80:8765");
 
 ws.onopen = () => {
-  console.log("WS connected");
+  console.log("WS open");
+};
+
+ws.onerror = (e) => {
+  console.error("WS error", e);
+};
+
+ws.onclose = (e) => {
+  console.error(
+    "WS closed",
+    "code:", e.code,
+    "reason:", e.reason,
+    "clean:", e.wasClean
+  );
 };
 
 const canvas = document.getElementById("canvas");
